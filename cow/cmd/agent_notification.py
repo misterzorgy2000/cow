@@ -13,23 +13,12 @@
 # WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 # License for the specific language governing permissions and limitations
 # under the License.
-
-import cotyledon
-from cotyledon import oslo_config_glue
-from oslo_log import log
-
-from cow import notification
-from cow import service
-
-LOG = log.getLogger(__name__)
-
+import time
 
 def main():
-    conf = service.prepare_service()
-    conf.log_opt_values(LOG, log.DEBUG)
-
-    sm = cotyledon.ServiceManager()
-    sm.add(notification.NotificationService,
-           workers=conf.notification.workers, args=(conf,))
-    oslo_config_glue.setup(sm, conf)
-    sm.run()
+    while True:
+        print(10)
+        time.sleep(10)
+        
+if __name__ == '__main__':
+    main()
