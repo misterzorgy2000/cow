@@ -1,4 +1,5 @@
 from colorama import init
+import time
 
 import oslo_messaging
 from oslo_messaging import get_notification_transport
@@ -24,6 +25,10 @@ def run_ai():
         print('ok')
     except Exception:
         print(Exception)
+        
+    while True:
+        print(10)
+        time.sleep(10)
         
 if __name__ == '__main__':
     run_ai()
