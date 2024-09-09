@@ -78,3 +78,5 @@ etc/phoenix/phoenix.conf.sample
 
 # Atom
 .remote-sync.json
+
+!devstack/**
