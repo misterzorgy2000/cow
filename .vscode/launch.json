@@ -10,7 +10,7 @@
             "name": "API debug",
             "type": "debugpy",
             "request": "launch",
-            "module": "cow.api",
+            "module": "phoenix.api",
             
         },
         {

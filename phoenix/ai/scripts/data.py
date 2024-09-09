@@ -2,9 +2,9 @@ from os import makedirs
 import pandas as pd
 import datetime
 
-from cow.ai import DS_DATA_DIR
-from cow.gnocchi_client import GnocchiClient
-from cow import conf
+from phoenix.ai import DS_DATA_DIR
+from phoenix.gnocchi_client import GnocchiClient
+from phoenix import conf
 
 gnocchi = GnocchiClient(conf).client
 

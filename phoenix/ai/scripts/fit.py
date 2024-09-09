@@ -3,8 +3,8 @@ import os
 from sklearn.model_selection import train_test_split
 from catboost import CatBoostRegressor
 
-from cow.conf import CONF
-from cow.ai import DS_DATA_DIR, MODEL_DIR
+from phoenix.conf import CONF
+from phoenix.ai import DS_DATA_DIR, MODEL_DIR
 
 def fit_model(callbacks = []):
     os.makedirs(MODEL_DIR, exist_ok=True, mode=0o777)
