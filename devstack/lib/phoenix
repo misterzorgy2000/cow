@@ -54,8 +54,8 @@ function create_phoenix_conf_file {
     iniset $PHOENIX_CONF gnocchi_client endpoint "localhost:8041"    
     iniset $PHOENIX_CONF gnocchi_client timespan "1440"
 
-    iniset $PHOENIX_CONF schedule cron_update_metrics "*/2 0 \* \* \* \*"
-    iniset $PHOENIX_CONF cron_fit_model cron_update_metrics "*/2 0 \* \* \* \*"
+    iniset $PHOENIX_CONF schedule cron_update_metrics "*\* \* \* 1 \* \*"
+    iniset $PHOENIX_CONF cron_fit_model cron_update_metrics "\* \* \* 1 \* \*"
 }
 
 
