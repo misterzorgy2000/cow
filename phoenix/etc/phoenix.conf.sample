@@ -1,32 +1,32 @@
 [DEFAULT]
 transport_url = rabbit://stackrabbit:secret@89.169.168.186:5672/
-control_exchange = ai
 debug = True
 
 [api]
 host = 89.169.168.186
 port = 5678
 
-[ai]
-target='node_disk_read_bytes_total_y'
-one_hot_drop='if_binary'
-auto_class_weights='Balanced'
-n_splits=5
-scoring='f1', 'roc_auc'
-n_jobs=-1
-metrics='node_hwmon_temp_celsius','node_cpu_seconds_total','node_memory_MemTotal_bytes','node_memory_MemFree_bytes','node_disk_read_bytes_total_y' 
-
 [oslo_messaging_notifications]
-transport_url = rabbit://stackrabbit:secret@89.169.168.186:5672/
-topics=ai.notifications
+topics = ai.notifications
 driver = messagingv2
 
+[ai]
+metrics = scaph_host_disk_total_bytes, scaph_host_disk_available_bytes, node_cpu_seconds_total, scaph_host_load_avg_five, scaph_host_memory_total_bytes, scaph_host_memory_free_bytes, node_hwmon_temp_celsius
+n_jobs = -1
+validation_metrics = f1, roc_auc
+n_splits = 5
+auto_class_weights = Balanced
+one_hot_drop = if_binary
+target = scaph_host_power_microwatts
+
 [gnocchi_client]
-api_version=1
-endpoint = localhost:8041
-endpoint_type=public
-timespan=1440
+endpoint = http://10.1.101.30:8041/
+timespan = 1440
+endpoint_type = public
+api_version = 1
 
 [schedule]
-cron_update_metrics="*/2 0 * * *"
-cron_fit_model="*/3 0 * * *"  
+cron_update_metrics = * * * * * *
+
+[cron_fit_model]
+cron_update_metrics = * * * * * *
