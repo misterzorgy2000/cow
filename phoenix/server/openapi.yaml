@@ -1,0 +1,338 @@
+openapi: 3.0.0
+info:
+  title: Phoenix API
+  version: 0.0.1
+servers:
+- url: https://phoenix.server
+paths:
+  /api/v1/predict/{model_id}:
+    post:
+      description: Сделать прогноз
+      operationId: Predict
+      parameters:
+      - description: Токен аутентификации
+        in: header
+        name: X-Auth-Token
+        required: true
+        schema:
+          description: Токен аутентификации
+          type: string
+      - description: Id модели
+        in: path
+        name: model_id
+        required: true
+        schema:
+          type: string
+      - description: "Курсор для получения следующей порции данных, для первого за\
+          проса должен передаваться пустым"
+        in: query
+        name: cursor
+        required: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/predict_request'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/prediction'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Internal Server Error
+  /api/v1/models/{model_id}:
+    get:
+      description: Получить данные о модели
+      operationId: GetModelByID
+      parameters:
+      - description: Токен аутентификации
+        in: header
+        name: X-Auth-Token
+        required: true
+        schema:
+          description: Токен аутентификации
+          type: string
+      - description: Id модели
+        in: path
+        name: model_id
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/model'
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Internal Server Error
+  /api/v1/models:
+    get:
+      description: Получить список моделей.
+      operationId: GetModels
+      parameters:
+      - description: Токен аутентификации
+        in: header
+        name: X-Auth-Token
+        required: true
+        schema:
+          description: Токен аутентификации
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/short_model'
+                type: array
+          description: OK
+        "401":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Unauthorized
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/error_response'
+          description: Internal Server Error
+components:
+  parameters:
+    x_auth_token:
+      description: Токен аутентификации
+      in: header
+      name: X-Auth-Token
+      required: true
+      schema:
+        description: Токен аутентификации
+        type: string
+  responses:
+    "401":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+      description: Unauthorized
+    "500":
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/error_response'
+      description: Internal Server Error
+  schemas:
+    predict_request:
+      properties:
+        payload:
+          additionalProperties: true
+          description: Свойства специфичные для моделей
+          title: payload
+          type: object
+        start:
+          format: date-time
+          title: start
+          type: string
+        end:
+          format: date-time
+          title: end
+          type: string
+      required:
+      - end
+      - start
+      title: predict_request
+      type: object
+    prediction:
+      example:
+        cursor: cursor
+        data:
+        - metrics:
+          - datetime: 2000-01-23T04:56:07.000+00:00
+            value: 0.8008281904610115
+          - datetime: 2000-01-23T04:56:07.000+00:00
+            value: 0.8008281904610115
+          node_id: node_id
+        - metrics:
+          - datetime: 2000-01-23T04:56:07.000+00:00
+            value: 0.8008281904610115
+          - datetime: 2000-01-23T04:56:07.000+00:00
+            value: 0.8008281904610115
+          node_id: node_id
+        model_id: model_id
+      properties:
+        model_id:
+          title: model_id
+          type: string
+        cursor:
+          description: "Курсор используя который можно получить следующую порцию д\
+            анных, если пустой - больше данных нет"
+          title: cursor
+          type: string
+        data:
+          items:
+            $ref: '#/components/schemas/prediction_data_inner'
+          title: data
+          type: array
+      required:
+      - data
+      - model_id
+      title: prediction
+      type: object
+    error_response:
+      description: Ответ с информацией об ошибке
+      example:
+        detail: detail
+      properties:
+        detail:
+          description: Информация об ошибке
+          title: detail
+          type: string
+      required:
+      - detail
+      title: error_response
+      type: object
+    model:
+      example:
+        score: 0.8008281904610115
+        name: name
+        description: description
+        id: id
+        type: type
+        version: version
+        status: Ready
+      properties:
+        id:
+          title: id
+          type: string
+        type:
+          description: "Тип модели, указывает на то, какой параметр предсказывает\
+            \ модель"
+          title: type
+          type: string
+        name:
+          title: name
+          type: string
+        version:
+          title: version
+          type: string
+        score:
+          title: score
+          type: number
+        status:
+          enum:
+          - Ready
+          - Fit
+          title: status
+          type: string
+        description:
+          title: description
+          type: string
+      required:
+      - description
+      - id
+      - name
+      - score
+      - status
+      - type
+      - version
+      title: model
+      type: object
+    short_model:
+      example:
+        name: name
+        id: id
+        type: type
+        version: version
+        status: Ready
+      properties:
+        id:
+          title: id
+          type: string
+        type:
+          description: "Тип модели, указывает на то, какой параметр предсказывает\
+            \ модель"
+          title: type
+          type: string
+        name:
+          title: name
+          type: string
+        version:
+          title: version
+          type: string
+        status:
+          enum:
+          - Ready
+          - Fit
+          title: status
+          type: string
+      required:
+      - id
+      - name
+      - status
+      - type
+      - version
+      title: short_model
+      type: object
+    prediction_data_inner_metrics_inner:
+      example:
+        datetime: 2000-01-23T04:56:07.000+00:00
+        value: 0.8008281904610115
+      properties:
+        datetime:
+          format: date-time
+          title: datetime
+          type: string
+        value:
+          title: value
+          type: number
+      required:
+      - datetime
+      - value
+      title: prediction_data_inner_metrics_inner
+      type: object
+    prediction_data_inner:
+      additionalProperties: true
+      example:
+        metrics:
+        - datetime: 2000-01-23T04:56:07.000+00:00
+          value: 0.8008281904610115
+        - datetime: 2000-01-23T04:56:07.000+00:00
+          value: 0.8008281904610115
+        node_id: node_id
+      properties:
+        node_id:
+          type: string
+        metrics:
+          items:
+            $ref: '#/components/schemas/prediction_data_inner_metrics_inner'
+          type: array
+      required:
+      - node_id
+      title: prediction_data_inner
+      type: object

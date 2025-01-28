@@ -1,0 +1,48 @@
+{
+  "models": [
+    {
+      "id": "pc_2025_01_01",
+      "description": "Power Consumption Model 0.0.1",
+      "type": "power_consumption",
+      "name": "pc_001",
+      "version": "0.0.1",
+      "status": "Ready",
+      "score": 0.67
+    },
+    {
+      "id": "pc_2025_01_02",
+      "description": "Power Consumption Model 0.0.2",
+      "type": "power_consumption",
+      "name": "pc_002",
+      "version": "0.0.2",
+      "status": "Fit",
+      "score": 0.74
+    },
+    {
+      "id": "pc_2025_01_03",
+      "description": "Power Consumption Model 0.0.3",
+      "type": "power_consumption",
+      "name": "pc_003",
+      "version": "0.0.3",
+      "status": "Fit",
+      "score": 0.82
+    }
+  ],
+  "predictions": [
+    {
+      "model_id": "pc_2025_01_02",
+      "cursor": "1",
+      "data": [
+        {
+          "node_id": "cluster_node_1",
+          "metrics": [
+            {
+              "datetime": "2025-01-20T12:34:56",
+              "value": 88
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
